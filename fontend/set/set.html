@@ -10,7 +10,7 @@
 </head>
 <body>    
     <div class="row">
-        <div class="container">
+        <div class="container">          
             <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
                 <a class="navbar-brand" href="#">Navbar</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -102,13 +102,22 @@
 }( jQuery ));
 
 function sendOrder(){
-  var json = [];
+  var json= [];
   $("#set_supply tr").each(function(index, ele){    
-    var total = parseInt($(this).find('td:eq(2)').find('input').val()); //คงเหลือ 
-    var total = parseInt($(this).find('td:eq(2)').find('input').val()); //คงเหลือ 
-    if(!isNaN(total) && total > -1)
-    console.log(total);
+    var name_th = $(this).find('td:eq(1)').text(); //รายการ
+    var remain = parseInt($(this).find('td:eq(2)').find('input').val()); //คงเหลือ 
+    var request = parseInt($(this).find('td:eq(3)').find('input').val()); //ต้องการเบิก 
+    var item = {};
+    if(!isNaN(remain)){
+      console.log(name_th);
+    item['code'] = ele.id;
+    item['name_th'] = name_th;
+    item['remain'] = remain;
+    item['request'] = request;
+    json.push(item);
+    }    
   });
+   console.log(json);
 }
 
 function clearArray(arr) {
