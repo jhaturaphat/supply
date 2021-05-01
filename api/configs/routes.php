@@ -3,6 +3,8 @@
 $routes['/api/set']['GET']       = './set/get.php';  
 $routes['/api/set']['POST']      = './set/post.php'; 
 
+$routes['/api/ward']['GET']       = './ward/get.php';  
+
 $routes['/api/member']['PUT']       = './members/put.php';  
 $routes['/api/member']['DELETE']    = './members/delete.php';  
 
