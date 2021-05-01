@@ -5,16 +5,128 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="/fontend/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/fontend/assets/bootstrap/css/bootstrap.min.css">    
     <link rel="stylesheet" href="/fontend/assets/bootstrap/css/bootstrap-grid.min.css">
 </head>
 <body>    
+    <div class="row">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                <a class="navbar-brand" href="#">Navbar</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+              
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                      <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown
+                      </a>
+                      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                      </div>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link disabled" href="#">Disabled</a>
+                    </li>
+                  </ul>
+                  <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                  </form>
+                </div>
+              </nav>
+        </div>
+        <div class="container">
+            <div class="row" >
+                <table class="table sticky-top bg-light">
+                  <thead>
+                    <tr>
+                        <th scope="col">รหัส</th>
+                        <th scope="col">รายการ</th>
+                        <th scope="col">จำนวนคงเหลือ</th>
+                        <th scope="col">จำนวนที่แลก</th>
+                        <th scope="col">หน่วยนับ</th>
+                        <th scope="col">หน่วยงาน</th>
+                    </tr>
+                </thead>
+                </table>
+                <table class="table">                    
+                    <tbody id="set_supply">
+                        
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-primary" onclick="return sendOrder()">บันทึก</button>
+        </div>
+    </div>
+    
     <script src="/fontend/assets/jquery-3.6.0.min.js"></script>
+    <script src="/fontend/assets/bootstrap/js/bootstrap.min.js"></script>
 </body>  
 </html>
 
 <script>
-$(function(){
-    
-});
+(function ( $ ) { 
+    const API = "http://localhost:9000/api"; 
+    $.ajax({
+        async: false,
+        dataType: "json",
+        url: API+'/set',        
+        success: function(json){
+            var obj = JSON.parse(JSON.stringify(json))
+            $.each(obj, function(key, val){
+                var tr = "<tr id='"+val.id+"'>";
+                tr = tr + "<td>" + val.id + "</td>";
+                tr = tr + "<td>" + val.name_th + "</td>";
+                tr = tr + "<td><input type='number' min='0' max='99'></td>";
+                tr = tr + "<td><input type='number' min='0' max='99'></td>";
+                tr = tr + "<td>"+val.unit+"</td>";
+                tr = tr + "<td>"+val.group+"</td>";
+                tr = tr + "</tr>";
+                $("#set_supply").append(tr);
+                
+            });            
+        }
+    });
+}( jQuery ));
+
+function sendOrder(){
+  var json = [];
+  $("#set_supply tr").each(function(index, ele){    
+    var total = parseInt($(this).find('td:eq(2)').find('input').val()); //คงเหลือ 
+    var total = parseInt($(this).find('td:eq(2)').find('input').val()); //คงเหลือ 
+    if(!isNaN(total) && total > -1)
+    console.log(total);
+  });
+}
+
+function clearArray(arr) {
+    for (var i = arr.length; i > 0; i--) {
+        arr.pop();
+    }
+}
 </script>
+
+<style>   
+    #set_supply tr td input[type="number"]{ 
+        width: 50px;
+        background-color: black;
+        color: white;
+        border-style: none;
+        text-align: center;
+    }
+    .table td {
+     padding: .1rem; 
+}
+</style>
