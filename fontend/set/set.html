@@ -12,44 +12,20 @@
     <div class="row">
         <div class="container">          
             <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-                <a class="navbar-brand" href="#">Navbar</a>
+                <a class="navbar-brand" href="#">ระบบเบิกเซทและอุปกรณ์จ่ายกลาง</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
                 </button>
-              
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                  <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                      <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
-                      </a>
-                      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                      </div>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link disabled" href="#">Disabled</a>
-                    </li>
-                  </ul>
-                  <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                  </form>
-                </div>
               </nav>
         </div>
         <div class="container">
             <div class="row" >
-                <table class="table sticky-top bg-light">
+                <div class="col-md-3">
+                  <select name="" id="ward_id" class="form-control mt-3">
+                    <option value="0">โปรดเลือก</option>
+                  </select>
+                </div>
+                <table class="table">     
                   <thead>
                     <tr>
                         <th scope="col">รหัส</th>
@@ -59,9 +35,7 @@
                         <th scope="col">หน่วยนับ</th>
                         <th scope="col">หน่วยงาน</th>
                     </tr>
-                </thead>
-                </table>
-                <table class="table">                    
+                </thead>               
                     <tbody id="set_supply">
                         
                     </tbody>
@@ -94,14 +68,32 @@
                 tr = tr + "<td>"+val.unit+"</td>";
                 tr = tr + "<td>"+val.group+"</td>";
                 tr = tr + "</tr>";
-                $("#set_supply").append(tr);
+                $("#set_supply").append(tr);                
+            });            
+        }
+    });
+    $.ajax({
+        async: false,
+        dataType: "json",
+        url: API+'/ward',        
+        success: function(json){
+            var obj = JSON.parse(JSON.stringify(json))
+            $.each(obj, function(key, val){
+                var opt = "<option value='"+val.id+"'>";
+                  opt += val.name
+                opt += "</option>";
                 
+                $("#ward_id").append(opt);                
             });            
         }
     });
 }( jQuery ));
 
 function sendOrder(){
+  if($("#ward_id").val() === '0'){
+    alert();
+    return;
+  } 
   var json= [];
   $("#set_supply tr").each(function(index, ele){    
     var name_th = $(this).find('td:eq(1)').text(); //รายการ
@@ -114,9 +106,14 @@ function sendOrder(){
     item['name_th'] = name_th;
     item['remain'] = remain;
     item['request'] = request;
+    item['ward_id'] = $("#ward_id").val();
     json.push(item);
     }    
   });
+  if(!json.length > -1){
+    alert();
+    return;
+  }
    console.log(json);
 }
 
