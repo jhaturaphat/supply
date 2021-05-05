@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="/fontend/assets/bootstrap/css/bootstrap.min.css">    
-    <link rel="stylesheet" href="/fontend/assets/bootstrap/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="../../fontend/assets/bootstrap/css/bootstrap.min.css">    
+    <link rel="stylesheet" href="../../fontend/assets/bootstrap/css/bootstrap-grid.min.css">
 </head>
 <body>    
     <div class="row">
@@ -45,14 +45,17 @@
         </div>
     </div>
     
-    <script src="/fontend/assets/jquery-3.6.0.min.js"></script>
-    <script src="/fontend/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../fontend/assets/jquery-3.6.0.min.js"></script>
+    <script src="../../fontend/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/sweetalert.min.js"></script>
 </body>  
 </html>
 
 <script>
+const API = "http://localhost:9000/api/index.php?r=/api"; 
+
 (function ( $ ) { 
-    const API = "http://localhost:9000/api"; 
+    
     $.ajax({
         async: false,
         dataType: "json",
@@ -91,7 +94,7 @@
 
 function sendOrder(){
   if($("#ward_id").val() === '0'){
-    alert();
+    swal("Hello world!");
     return;
   } 
   var json= [];
