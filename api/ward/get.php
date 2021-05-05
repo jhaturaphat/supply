@@ -1,7 +1,7 @@
 <?php
 
 $sql = "SELECT * FROM ward";
-$result = $conn_db->prepare($sql);
+$result = $pdo->prepare($sql);
 $result->execute();
 $json = [];
 while($rs = $result->fetch(PDO::FETCH_OBJ)){

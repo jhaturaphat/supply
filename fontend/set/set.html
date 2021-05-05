@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../../fontend/assets/bootstrap/css/bootstrap.min.css">    
-    <link rel="stylesheet" href="../../fontend/assets/bootstrap/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">    
+    <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap-grid.min.css">
 </head>
 <body>    
     <div class="row">
@@ -36,7 +36,7 @@
                         <th scope="col">หน่วยงาน</th>
                     </tr>
                 </thead>               
-                    <tbody id="set_supply">
+                    <tbody id="set_supply"> 
                         
                     </tbody>
                 </table>
@@ -45,8 +45,8 @@
         </div>
     </div>
     
-    <script src="../../fontend/assets/jquery-3.6.0.min.js"></script>
-    <script src="../../fontend/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/jquery-3.6.0.min.js"></script>
+    <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="../../assets/js/sweetalert.min.js"></script>
 </body>  
 </html>
@@ -58,25 +58,27 @@ const API = "http://localhost:9000/api/index.php?r=/api";
     
     $.ajax({
         async: false,
+        type:'GET',
         dataType: "json",
         url: API+'/set',        
         success: function(json){
             var obj = JSON.parse(JSON.stringify(json))
             $.each(obj, function(key, val){
                 var tr = "<tr id='"+val.id+"'>";
-                tr = tr + "<td>" + val.id + "</td>";
-                tr = tr + "<td>" + val.name_th + "</td>";
-                tr = tr + "<td><input type='number' min='0' max='99'></td>";
-                tr = tr + "<td><input type='number' min='0' max='99'></td>";
-                tr = tr + "<td>"+val.unit+"</td>";
-                tr = tr + "<td>"+val.group+"</td>";
-                tr = tr + "</tr>";
+                tr += "<td data-id='" + val.id + "'>" + val.id + "</td>";
+                tr += "<td data-name_th>" + val.name_th + "</td>";
+                tr += "<td data-remain><input type='number' min='0' max='99' value=''></td>";
+                tr += "<td data-request><input type='number' min='0' max='99' value=''></td>";
+                tr += "<td>"+val.unit+"</td>";
+                tr += "<td style='color:"+val.color+"'>"+val.group+"</td>";
+                tr += "</tr>";
                 $("#set_supply").append(tr);                
             });            
         }
     });
     $.ajax({
         async: false,
+        type:'GET',
         dataType: "json",
         url: API+'/ward',        
         success: function(json){
@@ -97,29 +99,62 @@ function sendOrder(){
     swal("Hello world!");
     return;
   } 
-  var json= [];
-  $("#set_supply tr").each(function(index, ele){    
-    var name_th = $(this).find('td:eq(1)').text(); //รายการ
-    var remain = parseInt($(this).find('td:eq(2)').find('input').val()); //คงเหลือ 
-    var request = parseInt($(this).find('td:eq(3)').find('input').val()); //ต้องการเบิก 
+  
+  let json = [];
+  $("#set_supply tr").each(function(index, ele){ 
+    $(this).removeClass('bg-warning');   
+    var id = $(this).find('td[data-id]').attr('data-id'); //รหัส  
+    var name_th = $(this).find('td[data-name_th]').text(); //รายการ    
+    var remain = parseInt($(this).find('td[data-remain]').find('input').val()); //คงเหลือ 
+    var request = parseInt($(this).find('td[data-request]').find('input').val()); //ต้องการเบิก 
     var item = {};
-    if(!isNaN(remain)){
-      console.log(name_th);
-    item['code'] = ele.id;
-    item['name_th'] = name_th;
-    item['remain'] = remain;
-    item['request'] = request;
-    item['ward_id'] = $("#ward_id").val();
+    if(!isNaN(remain) && !isNaN(request)){      
+    item['code'] = id; //รหัส
+    item['name_th'] = name_th; //รายการ
+    item['remain'] = remain; //จำนวนคงเหลือ
+    item['request'] = request; //จำนวนที่แลก
+    item['ward_id'] = $("#ward_id").val();//หอผู้ป่วย
     json.push(item);
-    }    
+    }else{      
+      if(!isNaN(remain) || !isNaN(request)){
+        $(this).addClass('bg-warning');        
+      }      
+    } 
   });
-  if(!json.length > -1){
-    alert();
+  console.log(json.length);
+  if((json.length === 0)){
+    swal({
+      title: "ข้อมูลไม่ได้กรอกให้สมบุรณ์",      
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    });
     return;
   }
    console.log(json);
+   $.ajax({
+        async: false,
+        type:'POST',
+        dataType: "json",
+        url: API+'/set',   
+        data: JSON.stringify(json),    
+        success: function(json){
+            var obj = JSON.parse(JSON.stringify(json)); 
+            swal({
+              title: obj.message,      
+              icon: "success",
+              buttons: true              
+            });                    
+        },
+        error:function(json){
+          var obj = JSON.parse(JSON.stringify(json));       
+          console.log(obj.responseText);
+        }
+    });
+
 }
 
+// เคลียร์ Array
 function clearArray(arr) {
     for (var i = arr.length; i > 0; i--) {
         arr.pop();
