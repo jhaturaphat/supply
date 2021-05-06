@@ -1,7 +1,10 @@
 <?php
 
-$routes['/api/set']['GET']       = './set/get.php';  
-$routes['/api/set']['POST']      = './set/post.php'; 
+$routes['/api/set']['GET']          = './set/get.php';  
+$routes['/api/set/order']['GET']    = './set/order.php'; 
+$routes['/api/set']['POST']         = './set/post.php'; 
+$routes['/api/set/find']['GET']     = './set/find.php'; 
+$routes['/api/set']['PUT']          = './set/put.php'; 
 
 $routes['/api/ward']['GET']       = './ward/get.php';  
 

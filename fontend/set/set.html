@@ -7,6 +7,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">    
     <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="../../assets/bootstrap/font/bootstrap-icons.css">
 </head>
 <body>    
     <div class="row">
@@ -41,7 +42,8 @@
                     </tbody>
                 </table>
             </div>
-            <button class="btn btn-primary" onclick="return sendOrder()">บันทึก</button>
+            <br>
+            <button id="sendOrder" class="btn btn-primary" onclick="return sendOrder()">บันทึก</button>
         </div>
     </div>
     
@@ -95,13 +97,21 @@ const API = "http://localhost:9000/api/index.php?r=/api";
 }( jQuery ));
 
 function sendOrder(){
-  if($("#ward_id").val() === '0'){
-    swal("Hello world!");
+  if($("#ward_id").val() === '0'){    
+    swal({
+      title: "โปรดเลือกหอผู้ป่วย", 
+      icon: "error"                   
+      });
     return;
   } 
   
   let json = [];
+  clearArray(json); 
+  let warning = false; 
   $("#set_supply tr").each(function(index, ele){ 
+    if(warning){      
+      return;      
+    }
     $(this).removeClass('bg-warning');   
     var id = $(this).find('td[data-id]').attr('data-id'); //รหัส  
     var name_th = $(this).find('td[data-name_th]').text(); //รายการ    
@@ -115,9 +125,12 @@ function sendOrder(){
     item['request'] = request; //จำนวนที่แลก
     item['ward_id'] = $("#ward_id").val();//หอผู้ป่วย
     json.push(item);
+
     }else{      
       if(!isNaN(remain) || !isNaN(request)){
-        $(this).addClass('bg-warning');        
+        $(this).addClass('bg-warning'); 
+        warning = true;
+        return;      
       }      
     } 
   });
@@ -131,7 +144,16 @@ function sendOrder(){
     });
     return;
   }
-   console.log(json);
+  if(warning){
+    swal({
+      title: "ข้อมูลไม่ได้กรอกให้สมบุรณ์",      
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    });
+    return;
+  }
+  //  console.log(json);
    $.ajax({
         async: false,
         type:'POST',
@@ -144,11 +166,17 @@ function sendOrder(){
               title: obj.message,      
               icon: "success",
               buttons: true              
-            });                    
+            }); 
+            $('input').val('');  
+            $('select').val('0');
         },
         error:function(json){
-          var obj = JSON.parse(JSON.stringify(json));       
-          console.log(obj.responseText);
+          var obj = JSON.parse(JSON.stringify(json)); 
+          swal({
+              title: json.responseJSON.message,      
+              icon: "error"             
+            });   
+          console.log(json.responseJSON.message);
         }
     });
 
@@ -172,5 +200,17 @@ function clearArray(arr) {
     }
     .table td {
      padding: .1rem; 
+     text-shadow: 0px 0px 1px;
+}
+#sendOrder{  
+  position: fixed;
+  bottom: 0;
+  right: 15%;
+  width: 130px;
+}
+@media screen and (max-width: 600px) {
+  #sendOrder{
+    right: 0;
+  }
 }
 </style>

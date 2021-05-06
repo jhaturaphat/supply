@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">    
+    <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="../../assets/bootstrap/font/bootstrap-icons.css">
+</head>
+<body>
+    <div class="row">
+        <div class="container">          
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                <a class="navbar-brand" href="#">ระบบเบิกเซทและอุปกรณ์จ่ายกลาง</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+              </nav>
+        </div>
+        <div class="container">
+
+            <div class="row" >
+                <table class="table table-hover">     
+                  <thead>
+                    <tr>
+                        <th scope="col">รหัสเบิก</th>
+                        <th scope="col">วันที่</th>
+                        <th scope="col">หน่วยงาน</th>
+                        <th scope="col">จำนวนรายการ</th>
+                        <th scope="col">ผู้ส่งเบิก</th>
+                        <th scope="col">*</th>                        
+                        
+                    </tr>
+                </thead>               
+                    <tbody id="set_supply"> 
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+    </div>
+
+    <script src="../../assets/js/jquery-3.6.0.min.js"></script>
+    <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/sweetalert.min.js"></script>
+</body>
+</html>
+
+<script>
+    const API = "http://localhost:9000/api/index.php?r=/api"; 
+    $(function(){
+        $.ajax({
+            async: false,
+            type:'GET',
+            dataType: "json",
+            url: API+'/set/order',        
+            success: function(data){
+                var obj = JSON.parse(JSON.stringify(data));
+                $.each(obj, function(key, val){
+                    var tr = "<tr class='"+val.status+"' id='"+val.order_id+"'>";
+                    tr += "<td>" + val.order_id + "</td>";
+                    tr += "<td>" + val.create_at + "</td>";
+                    tr += "<td>"+val.ward+"</td>";
+                    tr += "<td>"+val.total+"</td>";
+                    tr += "<td>"+val.user_order+"</td>";
+                    tr += "<td><a href='payset.html?oid="+val.order_id+"' type='button' class='btn btn-success'><i class='bi bi-cart-check-fill'></i></a></td>";                    
+                    tr += "</tr>";
+                    $("#set_supply").append(tr);                
+                });       
+            }
+        });
+    });
+</script>
+
+
+<style>
+    .bi{
+        cursor: pointer;
+    }
+</style>

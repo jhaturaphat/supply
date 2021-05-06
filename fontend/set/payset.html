@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=H1, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hello Payset</h1>
+
+    <script src="../../assets/js/jquery-3.6.0.min.js"></script>
+    <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/sweetalert.min.js"></script>
+</body>
+</html>
+
+<script>
+    const API = "http://localhost:9000/api/index.php?r=/api"; 
+    $(function(){
+        //console.log(window.location); 
+         //รับค่าพารามิเตอร์จากหน้า order.html ต้องทำการเลื่อกเอาเฉพาะ พารามิเตอร์ที่ต้องการ
+        var param = window.location.search;                  
+        var oid = param.substring(param.indexOf('=') + 1, param.length);        
+
+        $.ajax({
+            url:API+'/set/find',
+            type:'GET',
+            dataType:"JSON",
+            data: {oid:oid},    
+            success:function(data){
+                console.log(data);
+            },
+            error:function(err){                                      
+                swal({
+                    title: err.responseJSON.message,      
+                    icon: "error"             
+                    });   
+                // console.log(err);
+            }
+        });
+        
+               
+    });
+</script>
