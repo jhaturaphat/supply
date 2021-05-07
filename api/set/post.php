@@ -24,4 +24,7 @@ foreach($data as $val){
 }
 
 http_response_code(200);
-echo json_encode(['message' => 'บันทึกสำเร็จ']);
+echo json_encode([
+    'message' => 'บันทึกสำเร็จ',
+    'order_id'=> $order
+    ]);

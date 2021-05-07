@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=H1, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">    
+    <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="../../assets/bootstrap/font/bootstrap-icons.css"> -->
+    <css-plugins></css-plugins>
+</head>
+<body>
+    
+    <div class="container">
+        <nav-bar></nav-bar>
+    </div>
+    <div class="container">
+        <div class="row">            
+                <div class="col text-left">
+                    <h4>โรงพยาบาลสมเด็จพระยุพราชเดชอุดม</h4>     
+                </div>
+
+                <div class="col text-right">
+                    <i id="create_at">วัน-เดือน-ปี ชม.นาที.วินาที</i>
+                    <h3 id="ward">WARD-NAME</h3>
+                    <b id="user_order">USER-NAME</b><br>
+                    <i id="bill_id" style="font-size: 18px">เลขที่ใบเบิก xxx-xx-x-xx-xxxx-x</i>     
+                    <input type="hidden" id="order_id">               
+                </div>            
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                  <th scope="col" class='text-สำดะ'>รหัส</th>
+                  <th scope="col" class='text-left'>รายการ</th>
+                  <th scope="col" class='text-center'>จำนวนคงเหลือ</th>
+                  <th scope="col" class='text-center'>จำนวนที่แลก</th>
+                  <th scope="col" class='text-center'>จำนวนที่ได้รับ</th>                  
+                  <th scope="col" class='text-center'>หน่วยนับ</th>
+                </tr>
+            </thead>
+            <tbody id="set_supply">
+
+            </tbody>
+        </table>
+    </div>
+
+    <script src="../../assets/js/jquery-3.6.0.min.js"></script>
+    <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/sweetalert.min.js"></script>
+    <script src="../../assets/js/include.js"></script>
+    
+    
+</body>
+</html>
+
+<script>
+    const API = "http://localhost:9000/api/index.php?r=/api"; 
+    $(function(){
+        
+        console.log(window.location); 
+         //รับค่าพารามิเตอร์จากหน้า order.html ต้องทำการเลื่อกเอาเฉพาะ พารามิเตอร์ที่ต้องการ
+        var param = window.location.search;                  
+        var oid = param.substring(param.indexOf('=') + 1, param.length);        
+
+        $.ajax({
+            url:API+'/set/find',
+            type:'GET',
+            dataType:"JSON",
+            data: {oid:oid},    
+            success:function(data){
+                var json = JSON.parse(JSON.stringify(data));
+                $.each(json, function(key, val){
+                    var tr = "<tr id='"+val.id+"'>";
+                    tr += "<td data-id='" + val.id + "'>" + val.id + "</td>";
+                    tr += "<td data-name_th>" + val.name_th + "</td>";
+                    tr += "<td data-remain class='text-center'>"+val.remain+"</td>";
+                    tr += "<td data-request class='text-center'>"+val.request+"</td>";
+                    var get = 0;
+                    var bg = 'bg-danger';
+                    if(val.get > 0){
+                        get = val.get; bg = 'bg-success';
+                    }else{
+                        get = val.request; bg = 'bg-danger';
+                    }
+                    tr += "<td data-get class='text-center'>"+get+"</td>";
+                    tr += "<td class='text-center'>"+val.unit+"</td>";                    
+                    tr += "</tr>";
+                    $("#set_supply").append(tr);                
+                }); 
+                
+                $("#create_at").text(json[0].create_at);
+                $("#ward").text(json[0].ward);
+                $("#user_order").text(json[0].user_order);
+                $("#bill_id").text("ใบเบิก "+json[0].order_id);  
+                $("#order_id").val(json[0].order_id);                
+            },
+            error:function(err){                                      
+                swal({
+                    title: err.responseJSON.message,      
+                    icon: "error"             
+                    });   
+                // console.log(err);
+            }
+        });    
+    });    
+</script>
+
+<style>
+    td[data-get] > input{
+        background-color: #ffc107;
+        color: black;
+        border-radius: none;
+        border: none;
+        text-align: center;
+        align-items: center;
+    }
+    .table td {
+     /* padding: .1rem;  */
+     text-shadow: 0px 0px 1px;
+    }
+    
+</style>
