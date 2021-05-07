@@ -2,7 +2,7 @@
 
 $data = json_decode(file_get_contents('php://input'));
 
-$sql = "INSERT INTO set_od (code, name_th,remain, request, ward_id, order_id) VALUES (?,?,?,?,?,?)";
+$sql = "INSERT INTO set_od (code, name_th,remain, request, ward_id, order_id, user_order) VALUES (?,?,?,?,?,?,?)";
 $stmt = $pdo->prepare($sql);
 $order_id = date( "Y-m-d_h:i:s");
 foreach($data as $val){
@@ -14,6 +14,7 @@ foreach($data as $val){
         $stmt->bindParam(4,$val->request, PDO::PARAM_INT);
         $stmt->bindParam(5,$val->ward_id, PDO::PARAM_INT);
         $stmt->bindParam(6,$order, PDO::PARAM_STR);
+        $stmt->bindParam(7,$val->user_order, PDO::PARAM_STR);
         $stmt->execute();
     }catch(PDOException $e){
         http_response_code('500');

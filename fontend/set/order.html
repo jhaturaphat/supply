@@ -66,7 +66,7 @@
                     tr += "<td>"+val.ward+"</td>";
                     tr += "<td>"+val.total+"</td>";
                     tr += "<td>"+val.user_order+"</td>";
-                    tr += "<td><a href='payset.html?oid="+val.order_id+"' type='button' class='btn btn-success'><i class='bi bi-cart-check-fill'></i></a></td>";                    
+                    tr += "<td><a href='payset.html?oid="+val.order_id+"' type='button' class='btn btn-success "+val.status+"'><i class='bi bi-cart-check-fill'></i></a></td>";                    
                     tr += "</tr>";
                     $("#set_supply").append(tr);                
                 });       
@@ -77,6 +77,12 @@
 
 
 <style>
+    .btn-success{
+        border: none;
+    }
+    .btn-success:hover{
+        border: none;
+    }
     .bi{
         cursor: pointer;
     }

@@ -5,23 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">    
+    <!-- <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">    
     <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap-grid.min.css">
-    <link rel="stylesheet" href="../../assets/bootstrap/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../../assets/bootstrap/font/bootstrap-icons.css"> -->
+    <css-plugins></css-plugins>
 </head>
 <body>    
     <div class="row">
-        <div class="container">          
-            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-                <a class="navbar-brand" href="#">ระบบเบิกเซทและอุปกรณ์จ่ายกลาง</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-                </button>
-              </nav>
-        </div>
+      <div class="container">
+        <nav-bar></nav-bar>
+      </div>
+        
         <div class="container">
             <div class="row" >
-                <div class="col-md-3">
+                <div class="col-md-3 mb-3">
                   <select name="" id="ward_id" class="form-control mt-3">
                     <option value="0">โปรดเลือก</option>
                   </select>
@@ -38,18 +35,30 @@
                     </tr>
                 </thead>               
                     <tbody id="set_supply"> 
-                        
+                      <js-plugins></js-plugins>
                     </tbody>
                 </table>
             </div>
-            <br>
-            <button id="sendOrder" class="btn btn-primary" onclick="return sendOrder()">บันทึก</button>
+            <br><br>
+            <div class="fixed-bottom bg-light">
+              <div class="container mt-3">
+                <div class="form-inline">
+                  <div class="form-group mb-3">
+                    <label for="staticEmail2" class="label mr-4">ผู้ส่งเบิก</label>
+                    <input type="text" class="form-control" id="user_order">
+                    <button id="sendOrder" class="btn btn-primary ml-4" onclick="return sendOrder()">บันทึก</button>
+                  </div> 
+                </div> 
+              </div>
+                           
+            </div>
         </div>
     </div>
     
     <script src="../../assets/js/jquery-3.6.0.min.js"></script>
     <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="../../assets/js/sweetalert.min.js"></script>
+    <script src="../../assets/js/include.js"></script>
 </body>  
 </html>
 
@@ -96,7 +105,7 @@ const API = "http://localhost:9000/api/index.php?r=/api";
     });
 }( jQuery ));
 
-function sendOrder(){
+function sendOrder(){  
   if($("#ward_id").val() === '0'){    
     swal({
       title: "โปรดเลือกหอผู้ป่วย", 
@@ -124,6 +133,7 @@ function sendOrder(){
     item['remain'] = remain; //จำนวนคงเหลือ
     item['request'] = request; //จำนวนที่แลก
     item['ward_id'] = $("#ward_id").val();//หอผู้ป่วย
+    item['user_order'] = $("#user_order").val(); //ผู้เบิก
     json.push(item);
 
     }else{      
@@ -202,14 +212,14 @@ function clearArray(arr) {
      padding: .1rem; 
      text-shadow: 0px 0px 1px;
 }
-#sendOrder{  
+#fix-footer{  
   position: fixed;
   bottom: 0;
   right: 15%;
   width: 130px;
 }
 @media screen and (max-width: 600px) {
-  #sendOrder{
+  #fix-footer{
     right: 0;
   }
 }
