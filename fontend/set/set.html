@@ -178,7 +178,7 @@ function sendOrder(){
               buttons: true              
             }).
             then((value) => {
-              window.location.replace = "http://127.0.0.1:5500/fontend/ward/view.html?oid="+obj.order_id+"";
+              location.href = "/fontend/ward/view.html?oid="+obj.order_id+"";
             }); 
             $('input').val('');  
             $('select').val('0');
