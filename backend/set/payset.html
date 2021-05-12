@@ -51,13 +51,14 @@
     <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="../../assets/js/sweetalert.min.js"></script>
     <script src="../../assets/js/include.js"></script>
+    <script src="../../assets/js/api.js"></script>
     
     
 </body>
 </html>
 
 <script>
-    const API = "http://localhost:9000/api/index.php?r=/api"; 
+    const API = new Api().url;
     $(function(){
         
         //console.log(window.location); 
