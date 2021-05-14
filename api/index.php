@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+date_default_timezone_set('Asia/Bangkok');
 header('Content-Type: Application/json; charset=utf8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: *');

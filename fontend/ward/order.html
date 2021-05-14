@@ -58,9 +58,12 @@
             success: function(data){
                 var obj = JSON.parse(JSON.stringify(data));
                 $.each(obj, function(key, val){
+                    let date = new Date(val.create_at);
+                    let date_result = date.toLocaleDateString('th-TH', {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'});
+                    let time_result = date.toLocaleTimeString('th-TH');
                     var tr = "<tr class='"+val.status+"' id='"+val.order_id+"'>";
                     tr += "<td>" + val.order_id + "</td>";
-                    tr += "<td>" + val.create_at + "</td>";
+                    tr += "<td>" + date_result +" "+ time_result + "น.</td>";
                     tr += "<td>"+val.ward+"</td>";
                     tr += "<td>"+val.total+"</td>";
                     tr += "<td>"+val.user_order+"</td>";

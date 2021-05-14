@@ -92,8 +92,10 @@
                     tr += "</tr>";
                     $("#set_supply").append(tr);                
                 }); 
-                
-                $("#create_at").text(json[0].create_at);
+                let date = new Date(json[0].create_at);
+                let date_result = date.toLocaleDateString('th-TH', {year: 'numeric', month: 'long', day: 'numeric'});
+                let time_result = date.toLocaleTimeString('th-TH');
+                $("#create_at").text(date_result+" "+time_result+"น.");
                 $("#ward").text(json[0].ward);
                 $("#user_order").text(json[0].user_order);
                 $("#bill_id").text("ใบเบิก "+json[0].order_id);  
